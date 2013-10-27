@@ -1,0 +1,9 @@
+{
+  "name": "amazon-2-click",
+  "fullName": "amazon-2-click",
+  "id": "jid1-r7IxnPHkZjIUYw",
+  "description": "Firefox addon for stopping wrong click in amazon 1-click button (for kindle content page)",
+  "author": "Ab.",
+  "license": "The MIT License",
+  "version": "0.2"
+}

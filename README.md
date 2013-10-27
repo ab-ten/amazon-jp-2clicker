@@ -15,9 +15,10 @@ chdir amazon-jp-2clicker
 cfx init
 ```
 
- - Copy data and lib files.
+ - Copy files.
 
 ```
+cp path-to-repository/* .
 cp path-to-repository/lib/* lib
 cp path-to-repository/data/* data
 ```
