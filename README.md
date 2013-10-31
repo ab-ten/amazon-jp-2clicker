@@ -7,7 +7,7 @@ Tested on Firefox 24.0
 Installation
 ------------
  - Install Firefox add-on SDK -> https://dev.mozilla.jp/addon-sdk-docs/dev-guide/tutorials/installation.html
- - Create amazon-jp-2clicker dir and initialize.
+ - Create amazon-jp-2clicker dir and initialize it.
 
 ```
 mkdir amazon-jp-2clicker
@@ -18,9 +18,9 @@ cfx init
  - Copy files.
 
 ```
-cp path-to-repository/* .
-cp path-to-repository/lib/* lib
-cp path-to-repository/data/* data
+cp path-to-repository-work/* .
+cp path-to-repository-work/lib/* lib
+cp path-to-repository-work/data/* data
 ```
 
  - Test run
