@@ -4,6 +4,7 @@
   "id": "jid1-r7IxnPHkZjIUYw",
   "description": "Firefox addon for stopping wrong click in amazon 1-click button (for kindle content page)",
   "author": "Ab.",
+  "homepage": "https://github.com/ab-ten/amazon-jp-2clicker",
   "license": "The MIT License",
-  "version": "0.3"
+  "version": "0.4"
 }

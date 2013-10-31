@@ -17,14 +17,14 @@ if (elm) {
     elm.style.left = -999;
     elm.style.position = "fixed";
 
-    var findtarget = function (e, t, lev) {
+    var findtarget = function (e, func, lev) {
 	while (e) {
 	    //console.log("[" + lev + "] " + e.className + "#" + e.id + " " + e);
-	    if (e.tagName == t) {
+	    if (func(e)) {
 		return e;
 	    }
 	    if (e.firstChild) {
-		var r = findtarget(e.firstChild, t, lev+1);
+		var r = findtarget(e.firstChild, func, lev+1);
 		if (r)
 		    return r;
 	    }
@@ -32,12 +32,25 @@ if (elm) {
 	}
 	return null;
     }
-    var selelm = findtarget(elm.parentElement, "SELECT", 0);
+    var selelm = findtarget(elm.parentElement, function (e) { return e.tagName == "SELECT"; }, 0);
+    var firstdeviceoption;
     if (selelm && selelm.type=="select-one") {
 	for (var i=0; selelm[i]; i++) {
 	    if (selelm[i].text.substring(0,2) == "1.") {
+		firstdeviceoption = selelm[i];
 		selelm.selectedIndex = i;
 		break;
+	    }
+	}
+    }
+    if (firstdeviceoption) {
+	var alloptions = document.getElementsByTagName('OPTION');
+	for (var i=0; i<alloptions.length; i++) {
+	    if (alloptions[i].text == firstdeviceoption.text
+		&& alloptions[i] != firstdeviceoption
+		&& alloptions[i].parentElement.tagName == 'SELECT'
+		&& alloptions[i].parentElement[alloptions[i].index] == alloptions[i]) {
+		alloptions[i].parentElement.selectedIndex = alloptions[i].index;
 	    }
 	}
     }
