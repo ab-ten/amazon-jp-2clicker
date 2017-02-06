@@ -1,112 +1,143 @@
+// -*- coding:utf-8-unix; js-indent-level:2; -*-
 
-if(unsafeWindow.self == unsafeWindow.top) {
-
-
-var elm = document.getElementById('buyButton');
-if (elm) {
-    var orgtop = elm.style.top;
-    var orgleft = elm.style.left;
-    var orgposition = elm.style.position;
-    var indicator = document.createElement("span");
-    var opacity = 0;
-    elm.parentElement.insertBefore(indicator, elm);
-
-    indicator.innerHTML = "[appear 1click]";
-    elm.setAttribute('disabled', 'disabled');
-    elm.style.top = -999;
-    elm.style.left = -999;
-    elm.style.position = "fixed";
-
-    var findtarget = function (e, func, lev) {
-	while (e) {
-	    //console.log("[" + lev + "] " + e.className + "#" + e.id + " " + e);
-	    if (func(e)) {
-		return e;
-	    }
-	    if (e.firstChild) {
-		var r = findtarget(e.firstChild, func, lev+1);
-		if (r)
-		    return r;
-	    }
-	    e = e.nextSibling;
-	}
-	return null;
-    }
-    var selelm = findtarget(elm.parentElement, function (e) { return e.tagName == "SELECT"; }, 0);
-    var firstdeviceoption;
-    if (selelm && selelm.type=="select-one") {
-	for (var i=0; selelm[i]; i++) {
-	    if (selelm[i].text.substring(0,2) == "1.") {
-		firstdeviceoption = selelm[i];
-		selelm.selectedIndex = i;
-		break;
-	    }
-	}
-    }
-    if (firstdeviceoption) {
-	var alloptions = document.getElementsByTagName('OPTION');
-	for (var i=0; i<alloptions.length; i++) {
-	    if (alloptions[i].text == firstdeviceoption.text
-		&& alloptions[i] != firstdeviceoption
-		&& alloptions[i].parentElement.tagName == 'SELECT'
-		&& alloptions[i].parentElement[alloptions[i].index] == alloptions[i]) {
-		alloptions[i].parentElement.selectedIndex = alloptions[i].index;
-	    }
-	}
-    }
-
-    indicator.onclick = function() {
-	if (elm.getAttribute('disabled')=='disabled' && opacity<=0) {
-	    elm.style.top = orgtop;
-	    elm.style.left = orgleft;
-	    elm.style.position = orgposition;
-	    indicator.style.display = "none";
-	    fadeanim();
-	}
-    }
-    var fadeanim = function() {
-	if (++opacity > 10) {
-	    opacity = 10;
-	}
-	elm.style.opacity = opacity / 10;
-	if (opacity >= 10) {
-	    elm.removeAttribute('disabled');
-	}else {
-	    setTimeout(fadeanim, 70);
-	}
-    }
-}else {
-    if (document.getElementById('buyBoxContent') == null) {
-	var notfound = document.createElement("div");
-	notfound.id = "notfound1click";
-	document.body.insertBefore(notfound, null);
-	notfound.align = "center";
-	var nftext = document.createElement("span");
-	nftext.innerHTML = "1Click Button Not Found";
-	notfound.appendChild(nftext);
-	var st = notfound.style;
-	st.position = "absolute";
-	st.right = 0;
-	st.top = 0;
-	st.width = "100px";
-	st.zIndex = 999;
-	st.backgroundColor = "#ff8888";
-	st.border = "5px solid gray";
-	nftext.style.top = "40px";
-	nftext.style.textAlign = "center";
-	notfound.onclick = function() {
-	    var fadeanim = function(opac) {
-		if (opac <= 0) {
-		    notfound.style.display = "none";
-		}else {
-		    notfound.style.opacity = opac / 10;
-		    setTimeout(function(){fadeanim(opac-1)}, 70);
-		}
-	    }
-	    fadeanim(10);
-	}
-    }
+function hightest_zIndex(elm) {
+  var z = 0;
+  try {
+    var st = window.getComputedStyle(elm, null);
+    var zn = parseInt(st.zIndex);
+    if (! isNaN(zn))
+      z = zn;
+  }catch (e) {
+    //console.log("exception: " + e);
+    return 0;
+  }
+  var cns = elm.childNodes;
+  var cns_len = cns.length;
+  for (var i=0; i<cns_len; i++) {
+    var z2 = hightest_zIndex(cns[i]);
+    //console.warn("z="+z + " z2="+z2);
+    if (z < z2)
+      z = z2;
+  }
+  //console.warn(elm + " : " + z);
+  return z;
 }
 
+function findtarget(e, func, lev) {
+  while (e) {
+    //console.log("[" + lev + "] " + e.className + "#" + e.id + " " + e);
+    if (func(e))
+      return e;
+    if (e.firstChild) {
+      var r = findtarget(e.firstChild, func, lev+1);
+      if (r)
+	return r;
+    }
+    e = e.nextSibling;
+  }
+  return null;
+}
 
+function find_ascendant(e, func) {
+  while (e) {
+    if (func(e))
+      return e;
+    e = e.parentElement;
+  }
+  return null;
+}
+
+function fadeanim(elm, indicator, opacity) {
+  opacity -= 0.1;
+  if (opacity < 0)
+    opacity = 0;
+  indicator.style.opacity = opacity;
+  if (opacity <= 0) {
+    elm.disabled = false;
+    //elm.style.cursor = self.port.emit('get_storage', 'orig_elm_cursor');
+    indicator.style.display = "none";
+  }else {
+    setTimeout(fadeanim, 70, elm, indicator, opacity);
+  }
+}
+
+function disable_1click() {
+  var elm = document.getElementById('one-click-button');
+  if (elm == null)
+    return false;
+  if (elm.tagName != "INPUT")
+    return false;
+  if (elm.type.toUpperCase() != "SUBMIT")
+    return false;
+
+  var style = window.getComputedStyle(elm, null);
+  self.port.emit('put_storage', 'orig_elm_cursor', elm.style.cursor);
+  //elm.style.cursor = "not-allowed";
+  elm.disabled = true;
+
+  var indicator = document.createElement("div");
+  indicator.id = "appear1click";
+  indicator.innerHTML = "[appear 1click]";
+  indicator.style.top = style.top;
+  indicator.style.left = style.left;
+  indicator.style.width = style.width;
+  indicator.style.height = style.height;
+  indicator.style.position = style.position;
+  indicator.style.backgroundColor = "white";
+  elm.parentElement.insertBefore(indicator, elm);
+  indicator.style.zIndex = hightest_zIndex(elm.parentElement) + 1;
+
+  indicator.onclick = function() {
+    if (elm.disabled) {
+      indicator.onclick = function() {};
+      fadeanim(elm, indicator, 1.0);
+    }
+  }
+
+  return true;
+}
+
+function no1click() {
+  var notfound = document.getElementById('notfound1click');
+  var indicator = document.getElementById('appear1click');
+  if (indicator) {
+    if (notfound)
+      notfound.style.display = "none";
+    return;
+  }
+  if (notfound)
+    return;
+
+  notfound = document.createElement("div");
+  notfound.id = "notfound1click";
+  notfound.align = "center";
+  var nftext = document.createElement("span");
+  nftext.innerHTML = "1Click Button Not Found";
+  notfound.appendChild(nftext);
+  notfound.style.position = "absolute";
+  notfound.style.right = 0;
+  notfound.style.top = 0;
+  notfound.style.width = "100px";
+  notfound.style.zIndex = 999;
+  notfound.style.backgroundColor = "#ff8888";
+  notfound.style.border = "5px solid gray";
+  nftext.style.top = "40px";
+  nftext.style.textAlign = "center";
+  notfound.onclick = function() {
+    var fadeanim2 = function(opac) {
+      if (opac <= 0) {
+	notfound.style.display = "none";
+      }else {
+	notfound.style.opacity = opac / 10;
+	setTimeout(function(){fadeanim2(opac-1)}, 70);
+      }
+    }
+    fadeanim2(10);
+  }
+  document.body.insertBefore(notfound, null);
+}
+
+if (window == window.parent) {
+  disable_1click();
+  no1click();
 }
