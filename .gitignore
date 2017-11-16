@@ -1,3 +1,5 @@
 bak/
 Makefile.local
 xpidir/
+web-ext/.web-extension-id
+web-ext/_xpi/
