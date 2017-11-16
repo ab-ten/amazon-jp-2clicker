@@ -1,0 +1,20 @@
+{
+    "name": "amazon-jp-2-click",
+    "manifest_version": 2,
+    "version": "0.5.2",
+    "description": "Firefox addon for stopping wrong click in amazon(jp) 1-click button (for kindle content page)",
+    "author": "Ab.",
+
+    "applications": {
+	"gecko": {
+	    "strict_min_version": "50.0"
+	}
+    },
+
+    "content_scripts": [
+	{
+	    "matches": [ "*://www.amazon.co.jp/*" ],
+	    "js": [ "2click.js" ]
+	}
+    ]
+}
