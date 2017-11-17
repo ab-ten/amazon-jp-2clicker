@@ -79,6 +79,29 @@ function disable_1click() {
   return true;
 }
 
+function disable_preorder() {
+  var elm_start = document.getElementById('oneClick-preorder-button');
+  if (elm_start == null)
+    return false;
+
+  var elm = null;
+  if (elm_start.tagName == "INPUT") {
+    elm = elm_start;
+  }else {
+    var inputs = elm_start.getElementsByTagName("INPUT");
+    if (inputs.length == 1)
+      elm = inputs[0];
+  }
+  if (elm == null)
+    return false;
+
+  var style = window.getComputedStyle(elm, null);
+  elm.disabled = true;
+
+  set_appear_1click(elm, style);
+  return true;
+}
+
 function set_appear_1click(elm, style) {
   var indicator = document.createElement("div");
   indicator.id = "appear1click";
@@ -141,6 +164,8 @@ function no1click() {
 }
 
 if (window == window.parent) {
-  disable_1click();
+  if (! disable_1click()) {
+    disable_preorder();
+  }
   no1click();
 }
