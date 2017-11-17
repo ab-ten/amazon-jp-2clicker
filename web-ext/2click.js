@@ -75,6 +75,11 @@ function disable_1click() {
   //elm.style.cursor = "not-allowed";
   elm.disabled = true;
 
+  set_appear_1click(elm, style);
+  return true;
+}
+
+function set_appear_1click(elm, style) {
   var indicator = document.createElement("div");
   indicator.id = "appear1click";
   indicator.innerHTML = "[appear 1click]";
@@ -93,8 +98,6 @@ function disable_1click() {
       fadeanim(elm, indicator, 1.0);
     }
   }
-
-  return true;
 }
 
 function no1click() {
