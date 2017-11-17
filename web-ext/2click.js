@@ -70,12 +70,7 @@ function disable_1click() {
   if (elm.type.toUpperCase() != "SUBMIT")
     return false;
 
-  var style = window.getComputedStyle(elm, null);
-  //self.port.emit('put_storage', 'orig_elm_cursor', elm.style.cursor);
-  //elm.style.cursor = "not-allowed";
-  elm.disabled = true;
-
-  set_appear_1click(elm, style);
+  set_appear_1click(elm);
   return true;
 }
 
@@ -95,14 +90,16 @@ function disable_preorder() {
   if (elm == null)
     return false;
 
-  var style = window.getComputedStyle(elm, null);
-  elm.disabled = true;
-
-  set_appear_1click(elm, style);
+  set_appear_1click(elm);
   return true;
 }
 
-function set_appear_1click(elm, style) {
+function set_appear_1click(elm) {
+  var style = window.getComputedStyle(elm, null);
+  //self.port.emit('put_storage', 'orig_elm_cursor', elm.style.cursor);
+  //elm.style.cursor = "not-allowed";
+  elm.disabled = true;
+
   var indicator = document.createElement("div");
   indicator.id = "appear1click";
   indicator.innerHTML = "[appear 1click]";
