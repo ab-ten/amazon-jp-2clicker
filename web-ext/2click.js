@@ -94,6 +94,18 @@ function disable_preorder() {
   return true;
 }
 
+function disable_upsell() {
+  var elm = document.getElementById('upsell-button-announce');
+  if (elm == null)
+    return false;
+  if (elm.tagName != "A")
+    return false;
+  if (elm.innerText.indexOf('読み放題') < 0)
+    return false;
+  set_appear_1click(elm, "[appear upsell]", "appearupsell");
+  return true;
+}
+
 function set_appear_1click(elm, text="[appear 1click]", id="appear1click") {
   var style = window.getComputedStyle(elm, null);
   //self.port.emit('put_storage', 'orig_elm_cursor', elm.style.cursor);
@@ -164,5 +176,6 @@ if (window == window.parent) {
   if (! disable_1click()) {
     disable_preorder();
   }
+  disable_upsell();
   no1click();
 }

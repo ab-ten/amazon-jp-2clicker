@@ -1,7 +1,7 @@
 {
     "name": "amazon-jp-2-click",
     "manifest_version": 2,
-    "version": "0.5.3",
+    "version": "0.5.4",
     "description": "Firefox addon for stopping wrong click in amazon(jp) 1-click button (for kindle content page)",
     "author": "Ab.",
 
