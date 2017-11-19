@@ -94,15 +94,15 @@ function disable_preorder() {
   return true;
 }
 
-function set_appear_1click(elm) {
+function set_appear_1click(elm, text="[appear 1click]", id="appear1click") {
   var style = window.getComputedStyle(elm, null);
   //self.port.emit('put_storage', 'orig_elm_cursor', elm.style.cursor);
   //elm.style.cursor = "not-allowed";
   elm.disabled = true;
 
   var indicator = document.createElement("div");
-  indicator.id = "appear1click";
-  indicator.innerHTML = "[appear 1click]";
+  indicator.id = id;
+  indicator.innerHTML = text;
   indicator.style.top = style.top;
   indicator.style.left = style.left;
   indicator.style.width = style.width;
