@@ -1,6 +1,6 @@
 // -*- coding:utf-8-unix; js-indent-level:2; -*-
 
-function hightest_zIndex(elm) {
+function highest_zIndex(elm) {
   var z = 0;
   try {
     var st = window.getComputedStyle(elm, null);
@@ -14,7 +14,7 @@ function hightest_zIndex(elm) {
   var cns = elm.childNodes;
   var cns_len = cns.length;
   for (var i=0; i<cns_len; i++) {
-    var z2 = hightest_zIndex(cns[i]);
+    var z2 = highest_zIndex(cns[i]);
     //console.warn("z="+z + " z2="+z2);
     if (z < z2)
       z = z2;
@@ -122,7 +122,7 @@ function set_appear_1click(elm, text="[appear 1click]", id="appear1click") {
   indicator.style.position = style.position;
   indicator.style.backgroundColor = "white";
   elm.parentElement.insertBefore(indicator, elm);
-  indicator.style.zIndex = hightest_zIndex(elm.parentElement) + 1;
+  indicator.style.zIndex = highest_zIndex(elm.parentElement) + 1;
 
   indicator.onclick = function() {
     if (elm.disabled) {
@@ -172,6 +172,29 @@ function no1click() {
   document.body.insertBefore(notfound, null);
 }
 
+function erase_qid_param() {
+  [...document.getElementsByTagName('a')].forEach((e) => {
+    m = e.href.match(/^(https?:\/\/[^/]*.amazon\.co\.jp)\/.*(\/dp\/.*)[?&]qid=\d+(.*)/);
+    if (m) {
+      e.href = m[1]+m[2]+m[3];
+    }
+  });
+}
+
+var kick_refresh = false;
+function cb2(mutations) {
+  if (! kick_refresh) {
+    kick_refresh = true;
+    window.setTimeout(() => {
+      kick_refresh = false;
+      erase_qid_param();
+    }, 500);
+  }
+}
+
+var root_observer = new MutationObserver(cb2);
+root_observer.observe(document, {childList:true, subtree:true});
+
 if (window == window.parent) {
   if (! disable_1click()) {
     disable_preorder();
@@ -179,3 +202,4 @@ if (window == window.parent) {
   disable_upsell();
   no1click();
 }
+erase_qid_param();
