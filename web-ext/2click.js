@@ -174,9 +174,9 @@ function no1click() {
 
 function erase_qid_param() {
   [...document.getElementsByTagName('a')].forEach((e) => {
-    m = e.href.match(/^(https?:\/\/[^/]*.amazon\.co\.jp)\/.*(\/dp\/.*)[?&]qid=\d+(.*)/);
+    m = e.href.match(/^(https?:\/\/[^/]*.amazon\.co\.jp)\/.*(\/dp\/[^/]+\/)(.*)[?&]qid=\d+(.*)/);
     if (m) {
-      e.href = m[1]+m[2]+m[3];
+      e.href = m[1]+m[2];
     }
   });
 }
